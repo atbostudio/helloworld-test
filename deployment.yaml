@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        volumeMounts:
+        - name: custom-nginx-html
+          mountPath: /usr/share/nginx/html
+        - name: custom-nginx-conf
+          mountPath: /custom-nginx/nginx.conf
+          subPath: nginx.conf  # Nutzt das subPath-Feature, um nur die Datei zu mounten
+        - name: temp-volume
+          mountPath: /tmp  # Mount für temporäre Dateien
+        env:
+        - name: WELCOME_MESSAGE
+          valueFrom:
+            configMapKeyRef:
+              name: nginx-config
+              key: welcome_message
+        command: ["/bin/sh", "-c"]
+        args:
+        - echo "$WELCOME_MESSAGE" > /usr/share/nginx/html/index.html && nginx -g 'daemon off;' -c /custom-nginx/nginx.conf
+        ports:
+        - containerPort: 8080
+      volumes:
+      - name: custom-nginx-html
+        emptyDir: {}
+      - name: custom-nginx-conf
+        configMap:
+          name: nginx-config  # Diese ConfigMap enthält die benutzerdefinierte nginx.conf
+      - name: temp-volume
+        emptyDir: {}
+
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
