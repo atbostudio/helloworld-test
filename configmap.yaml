@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: nginx-config
 data:
-  welcome_message: "Hallo Welt" 
+  welcome_message: "Miau Miau 🐱" 
   nginx.conf: |
     worker_processes  1;
 
