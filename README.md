@@ -1,5 +1,8 @@
 # helloworld-test
 
+OC client installation:
+https://docs.openshift.com/container-platform/4.8/cli_reference/openshift_cli/getting-started-cli.html
+
 Openshift: <br>
 Aufgaben: <br>
 User Hinzufügen: <br>
