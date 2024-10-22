@@ -8,12 +8,12 @@ Aufgaben: <br>
 User Hinzufügen: <br>
 oc get secret htpass-secret -ojsonpath={.data.htpasswd} -n openshift-config | base64 --decode > users.htpasswd <br>
 <br>
-htpasswd -bB users.htpasswd <username> <password> <br>
+htpasswd -bB users.htpasswd USERNAME PASSWORD <br>
 <br>
 oc create secret generic htpass-secret --from-file=htpasswd=users.htpasswd --dry-run=client -o yaml -n openshift-config | oc replace -f - <br>
 <br>
 Rechte (Cluster Admin): <br>
-oc adm policy add-cluster-role-to-user cluster-admin <user> <br>
+oc adm policy add-cluster-role-to-user cluster-admin USERNAME <br>
 Namespace anlegen <br>
 <br>
 <br>
